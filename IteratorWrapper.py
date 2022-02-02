@@ -1,5 +1,3 @@
-
-
 class IteratorWrapper:
     def __init__(self, iterator):
         self.iterator = iterator

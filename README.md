@@ -12,4 +12,23 @@ Where the brackets represent: (height, width, channel), the max pooling layers u
 Note that feature size is 7x7x512 after the last max pooling layer and channels refers to the number of features per pixel at each layer.
 
 
+## Instructions to Run Code
+To run the code, python version 3.\*.\* must be installed. To check your version, run
+```
+python -V
+```
+
+To download the code and train the system follow the following commands:
+
+```
+git clone 
+cd LiquidO_Classifier_ENPH_455
+pip install -r requirements.txt
+python3 Train.py
+```
+
+To evaluate the code on the evaluation set:
+```
+python3 VGG16_Evaluation.py
+```
 
