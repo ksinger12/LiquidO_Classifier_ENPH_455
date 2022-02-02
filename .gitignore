@@ -3,6 +3,5 @@ venv
 .DS_Store
 .idea/
 __pycache__/
-init_params.pt
-tut4-model.pt
-
+*.pt
+*.pth
