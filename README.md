@@ -63,7 +63,15 @@ the following command can be executed:
 ```
 nvidia-smi
 ```
-
+## Learning Rate
+The learning rate is found analytically by plotting the outputs of the following call:
+```
+lrs, losses = lr_finder.range_test(train_loader, ending_rate, number_of_iterations)
+```
+Where losses is the y-axis and lrs is the x-axis plotted on a logarithmic axis. The steepest part of the slope is the
+learning rate where the average of rates across the slope is used.
+The Learning_Rate_Execution script can be used to obtain the data for plotting purposes. For now, a found learning rate
+used as defined in the Setup script.
 
 ## Pre-Trained Model
 Using the pre-trained VGG-16 batch normalized model trained on the ImageNet dataset (meaning output is 1000 classes).

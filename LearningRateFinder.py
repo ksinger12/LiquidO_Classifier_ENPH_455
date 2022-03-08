@@ -3,14 +3,17 @@ from ExponentialLearningRate import ExponentialLR
 from IteratorWrapper import IteratorWrapper
 
 
-# Learning rate finder class
 class LRFinder:
+    """
+    Learning rate finder class used to determine the optimal learning rate for training data.
+    """
     def __init__(self, model, optimizer, criterion, device):
         self.optimizer = optimizer
         self.model = model
         self.criterion = criterion
         self.device = device
 
+        # Saving the inital parameters such that they do not need to be recalculated
         torch.save(model.state_dict(), 'init_params.pt')
 
     def range_test(self, iterator, end_lr=10, num_iter=100, smooth_f=0.05, diverge_th=5):
@@ -18,14 +21,16 @@ class LRFinder:
         losses = []
         best_loss = float('inf')
 
+        # defining an exponential learning rate and wrapping the initial
         lr_scheduler = ExponentialLR(self.optimizer, end_lr, num_iter)
         iterator = IteratorWrapper(iterator)
 
         for iteration in range(num_iter):
-            loss = self._train_batch(iterator)
+            # Calculating loss from training
+            loss = self.train_batch(iterator)
             lrs.append(lr_scheduler.get_last_lr()[0])
 
-            # update lr
+            # updating the learning rate
             lr_scheduler.step()
 
             if iteration > 0:
@@ -42,7 +47,7 @@ class LRFinder:
 
         return lrs, losses
 
-    def _train_batch(self, iterator):
+    def train_batch(self, iterator):
         self.model.train()
         self.optimizer.zero_grad()
 

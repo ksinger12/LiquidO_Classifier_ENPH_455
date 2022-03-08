@@ -1,0 +1,14 @@
+Steps to get to the model:
+
+- Initial model with all images starting at 0,0 obtained a 99.8_% accuracy when being tested with 15000 images (5000 per class)
+- The model was then tested with a shifted image set (no longer starting at 0,0)
+	- Issues: accuracy was only ~75% accurate 
+- To correct the issue, the model was trained with the shifted image set. Results:
+	- Testing with shifted image set: accuracy -> 98.67%, loss -> 0.035
+	- Testing with non-shifted image set: accuracy -> 98.50%, loss -> 0.042
+- This is still less than the 99% goal. 
+- To improve the model, rather than the generic image init parameter, the 5000 trained image model with non-shifted images were used as the init paramters. Results:
+	- Testing with shifted image set: accuracy -> 99.29%, loss -> 0.043
+        - Testing with non-shifted image set: accuracy -> 99.34%, loss -> 0.027
+- Therefore the goal has been met.
+
