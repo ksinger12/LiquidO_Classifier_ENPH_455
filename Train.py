@@ -1,7 +1,5 @@
 import torch.optim as optim
 import torchvision
-# from torchviz import make_dot
-
 import torchvision.transforms as transforms
 
 import copy
@@ -43,72 +41,54 @@ test_transforms = transforms.Compose([
 train_data = torchvision.datasets.ImageFolder(PATH + 'Train', transform=train_transforms)
 test_data = torchvision.datasets.ImageFolder(PATH + 'Test', transform=test_transforms)
 
-# Validation split (creating validation set)
-VALID_RATIO = 0.9
+number_training_examples = int(len(train_data) * VALIDATION_SET_RATIO)
+number_validation_examples = len(train_data) - number_training_examples
 
-n_train_examples = int(len(train_data) * VALID_RATIO)
-n_valid_examples = len(train_data) - n_train_examples
-
-train_data, valid_data = torch.utils.data.random_split(train_data, [n_train_examples, n_valid_examples])
-
-# Making sure validation data uses test transforms
-valid_data = copy.deepcopy(valid_data)  # stops the transformations on one set from effecting the other
+train_data, valid_data = \
+    torch.utils.data.random_split(train_data, [number_training_examples, number_validation_examples])
+valid_data = copy.deepcopy(valid_data)
 valid_data.dataset.transform = test_transforms
 
 print(f'Number of training examples: {len(train_data)}')
 print(f'Number of validation examples: {len(valid_data)}')
 print(f'Number of testing examples: {len(test_data)}')
 
-train_loader = torch.utils.data.DataLoader(train_data, shuffle=True, batch_size=batch_size)
-valid_loader = torch.utils.data.DataLoader(valid_data, batch_size=batch_size)
-test_loader = torch.utils.data.DataLoader(test_data, batch_size=batch_size)
+train_loader = torch.utils.data.DataLoader(train_data, shuffle=True, batch_size=BATCH_SIZE)
+valid_loader = torch.utils.data.DataLoader(valid_data, batch_size=BATCH_SIZE)
+test_loader = torch.utils.data.DataLoader(test_data, batch_size=BATCH_SIZE)
 
 data_iter = iter(test_loader)
 
 # Training the model
-optimizer = optim.Adam(model.parameters(), lr=START_LR)
+optimizer = optim.Adam(model.parameters(), lr=INITIAL_LR)
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-criterion = nn.CrossEntropyLoss()  # type of cost function -> computes the softmax activation function on suppled predections as well as the loss via negaive log likelihood
-
-model = model.to(device)
+criterion = nn.CrossEntropyLoss()
 criterion = criterion.to(device)
 
-# reset model to initial parameters
+model = model.to(device)
 model.load_state_dict(torch.load('init_params.pt'))
 
 params = [
-          {'params': model.features.parameters(), 'lr': FOUND_LR / 10},
+          {'params': model.features.parameters(), 'lr': LEARNING_RATE / 10},
           {'params': model.classifier.parameters()}
          ]
-optimizer = optim.Adam(params, lr=FOUND_LR)  # Adam algorithm optimizer
+optimizer = optim.Adam(params, lr=LEARNING_RATE)  # Adam algorithm optimizer
 
-
-# Telling us how long an epoch takes
-def epoch_time(start, end):
-    elapsed_time = end - start
-    elapsed_min = int(elapsed_time / 60)
-    elapsed_sec = int(elapsed_time - (elapsed_min * 60))
-    return elapsed_min, elapsed_sec
-
-
-best_valid_loss = float('inf')
+min_validation_loss = float('inf')
 
 for epoch in range(EPOCHS):
-
     start_time = time.monotonic()
 
-    train_loss, train_acc = VGG.train(model, train_loader, optimizer, criterion, device)
-    valid_loss, valid_acc = VGG.evaluate(model, valid_loader, criterion, device)
+    train_loss, train_accuracy = VGG.train(model, train_loader, optimizer, criterion, device)
+    valid_loss, valid_accuracy = VGG.evaluate(model, valid_loader, criterion, device)
 
-    # if this is the best validation loss we've seen, save it
-    if valid_loss < best_valid_loss:
+    if valid_loss < min_validation_loss:
         best_valid_loss = valid_loss
-        torch.save(model.state_dict(), 'VGG-16_trained_model.pt')
+        torch.save(model.state_dict(), 'VGG16_trained_model.pt')
 
     end_time = time.monotonic()
+    minutes, secs = epoch_time(start_time, end_time)
 
-    epoch_min, epoch_secs = epoch_time(start_time, end_time)
-
-    print(f'Epoch: {epoch + 1:02} | Epoch Time: {epoch_min}m {epoch_secs}s')
-    print(f'\tTrain Loss: {train_loss:.3f} | Train Acc: {train_acc * 100:.2f}%')
-    print(f'\t Val. Loss: {valid_loss:.3f} |  Val. Acc: {valid_acc * 100:.2f}%')
+    print(f'Epoch: {epoch + 1:02} | Epoch Time: {minutes}m {secs}s')
+    print(f'\tTrain Loss: {train_loss:.3f} | Train Accuracy: {train_accuracy * 100:.2f}%')
+    print(f'\t Validation Loss: {valid_loss:.3f} |  Validation Accuracy: {valid_accuracy * 100:.2f}%')

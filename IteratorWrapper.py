@@ -1,4 +1,7 @@
 class IteratorWrapper:
+    """
+    Iterator wrapper class
+    """
     def __init__(self, iterator):
         self.iterator = iterator
         self._iterator = iter(iterator)

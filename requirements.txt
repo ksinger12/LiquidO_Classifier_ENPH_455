@@ -4,3 +4,4 @@ numpy==1.22.1
 torch==1.8.1
 torchvision==0.11.3
 torchviz==0.0.2
+sklearn==0.0

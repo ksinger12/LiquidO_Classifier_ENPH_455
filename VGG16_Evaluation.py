@@ -23,12 +23,11 @@ def plot_confusion_matrix(true_label, predicted, types):
     fig = plt.figure(figsize=(10, 10))
     ax = fig.add_subplot(1, 1, 1)
 
-    # Obtaining the confusion matrix via sklearn
-    cm = confusion_matrix(true_label, predicted)
-    cm = ConfusionMatrixDisplay(cm, display_labels=types)
+    matrix = confusion_matrix(true_label, predicted)
+    matrix = ConfusionMatrixDisplay(matrix, display_labels=types)
 
     # Plotting
-    cm.plot(values_format='d', cmap='Blues', ax=ax)
+    matrix.plot(values_format='d', cmap='Blues', ax=ax)
     plt.xticks(rotation=20)
     plt.savefig("./Images/confusion_matrix.pdf", dpi=600, bbox_inches='tight')
     plt.show()
@@ -57,7 +56,7 @@ def plot_incorrect(incorrect, types):
     """
     num_img_printing = len(incorrect)
 
-    if len(incorrect) > 50:
+    if num_img_printing > 50:
         num_img_printing = 50  # never printing more than 50 images
 
     rows = int(np.sqrt(num_img_printing))
@@ -74,8 +73,6 @@ def plot_incorrect(incorrect, types):
 
         # Obtaining the probability and label of incorrect prediction
         incorrect_prob, incorrect_label = torch.max(pr, dim=0)
-
-        # Normalizing the images before plotting them
         img = normalize_image(img)
 
         ax.imshow(img.cpu().numpy())
@@ -139,28 +136,17 @@ test_loss, test_acc = VGG.evaluate(model, test_loader, nn.CrossEntropyLoss(), de
 print(f'Test Loss: {test_loss:.3f} | Test Acc: {test_acc * 100:.2f}%')
 
 # Retrieving the predictions and obtaining the predicted labels
-images, labels, probs = get_predictions(model, test_loader, device)
-pred_labels = torch.argmax(probs, 1)
+images, labels, probabilities = get_predictions(model, test_loader, device)
+pred_labels = torch.argmax(probabilities, 1)
 
 plot_confusion_matrix(labels, pred_labels, classes)
 
-# Getting incorrectly labelled images for the test image set
+# Getting incorrectly labelled images for the image set
 incorrect_examples = []
-for image, label, prob, correct in zip(images, labels, probs, torch.eq(labels, pred_labels)):
+for image, label, prob, correct in zip(images, labels, probabilities, torch.eq(labels, pred_labels)):
     if not correct:
         incorrect_examples.append((image, label, prob))
 
 # Sorting incorrect examples by most incorrect (to ensure the most incorrect get plotted)
 incorrect_examples.sort(reverse=True, key=lambda x: torch.max(x[2], dim=0).values)
-
 plot_incorrect(incorrect_examples, classes)
-
-
-# outputs, _ = model(images)
-
-#  Higher the energy for a class, the more the network thinks that the image is of the particular class
-# This is the highest energy
-# _, predicted = torch.max(outputs, 1)
-
-# print('GroundTruth: ', ' '.join('%5s' % classes[labels[j]] for j in range(len(labels))))
-# print('Predicted: ', ' '.join('%5s' % classes[predicted[j]] for j in range(len(predicted))))

@@ -87,7 +87,15 @@ and then normalized using mean = [0.485, 0.456, 0.406] and std = [0.229, 0.224, 
 > Initially I ran into a certification error. The error was solved using the following: \
 > For mac users: go to Macintosh HD > Applications > Python 3.\* folder > double click on Install Certificates.command" file
 
+## Training Details
+### Optimizer: Adam
+
+### Loss Function: Cross-Entropy
+Type of cost function -> computes the softmax activation function on suppled predections as well as the loss via negaive log likelihood
+
 # References
+Adam optimizer: https://arxiv.org/pdf/1412.6980.pdf
+
 The code is based off the following:
 https://colab.research.google.com/github/bentrevett/pytorch-image-classification/blob/master/4_vgg.ipynb (used for implementing NN with PyTorch)
 
@@ -96,3 +104,6 @@ https://arxiv.org/abs/1506.01186
 
 The pre-trained model used (used to prevent the weights starting from scratch which takes longer to train).
 The data source is from VGG-16 batch normalized model trained on the ImageNet dataset 
+
+Other helpful links: 
+https://colab.research.google.com/github/bentrevett/pytorch-image-classification/
