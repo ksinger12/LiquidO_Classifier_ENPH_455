@@ -4,7 +4,7 @@ Electron, gamma ray, and positron classifier based on photon images from LiquidO
 ## Description
 A Visual Geometry Group 16 (VGG16) convolutional neural network (CNN) built to classify three types of images:
 Electrons, Gamma Rays, Positrons. 
-TheCNN has 16 layers with weights where the initial input is a 224x224 coloured image. The layers are structured as follows:
+The CNN has 16 layers with weights where the initial input is a 224x224 coloured image. The layers are structured as follows:
 
 Input(224x224x3) &rarr; 2\*convolution(224x224x64) &rarr; max pool &rarr; 2\*convolution(112x112x128) &rarr; max pooling &rarr; 3\*convolution(56x56x256) &rarr; max pooling &rarr; 3\*convolution(28x28x512) &rarr; 3\*convolution(14x14x512) &rarr; max pooling &rarr; fully connected(1x1x4096) &rarr; fully connected(1x1x4096) &rarr; fully connected(1x1x1000) &rarr; soft max
 
