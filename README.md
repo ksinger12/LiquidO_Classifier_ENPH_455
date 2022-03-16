@@ -89,12 +89,19 @@ and then normalized using mean = [0.485, 0.456, 0.406] and std = [0.229, 0.224, 
 
 ## Training Details
 ### Optimizer: Adam
+Adam is a one-dimensional method of gradient descent used to find parameters that make up the data's cost function. The 
+results can then be used to classify images when combined with the neural network.
 
 ### Loss Function: Cross-Entropy
-Type of cost function -> computes the softmax activation function on suppled predections as well as the loss via negaive log likelihood
+Cross-entropy cost function. Computes the soft-max activation function on supplied predictions as well as the loss 
+via negative log likelihood.
 
 # References
-Adam optimizer: https://arxiv.org/pdf/1412.6980.pdf
+Adam optimizer: 
+https://arxiv.org/pdf/1412.6980.pdf
+
+Cross-entropy: 
+https://machinelearningmastery.com/cross-entropy-for-machine-learning/
 
 The code is based off the following:
 https://colab.research.google.com/github/bentrevett/pytorch-image-classification/blob/master/4_vgg.ipynb (used for implementing NN with PyTorch)
