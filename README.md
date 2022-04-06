@@ -96,7 +96,7 @@ results can then be used to classify images when combined with the neural networ
 Cross-entropy cost function. Computes the soft-max activation function on supplied predictions as well as the loss 
 via negative log likelihood.
 
-### Final Note:
+## Final Note
 All results from this model and details about the project can be found in the thesis paper in this repo [here](https://github.com/ksinger12/LiquidO_Classifier_ENPH_455/blob/bf3acab91866e55b43fce7505e895704cc386fd8/Classifying%20Particle%20Interactions%20with%20LiquidO%20using%20Deep%20Learning.pdf).
 
 # References
